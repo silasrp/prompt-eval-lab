@@ -1,4 +1,4 @@
-# prompt_eval.lab
+# Prompt Evaluation Playground
 
 > A live prompt engineering evaluation playground — run experiments, score outputs with an LLM judge, and build a persistent portfolio of results.
 
@@ -21,7 +21,7 @@ The core idea is simple: **the same task, asked differently, produces measurably
 
 ## Live demo
 
-🔗 **[prompt-eval-lab.vercel.app](https://prompt-eval-lab.vercel.app)** ← replace with your URL
+🔗 **[prompt-eval-lab.vercel.app](https://prompt-eval-lab.vercel.app)**
 
 ---
 
@@ -50,42 +50,9 @@ The core idea is simple: **the same task, asked differently, produces measurably
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  BROWSER  (React + Vite)                                │
-│                                                         │
-│  ┌──────────────────┐  ┌──────────────────┐             │
-│  │  Playground UI   │  │  Experiments tab │             │
-│  │  select strategy │  │  portfolio view  │             │
-│  │  run · score     │  │  computed stats  │             │
-│  └────────┬─────────┘  └────────┬─────────┘             │
-└───────────┼─────────────────────┼───────────────────────┘
-            │  fetch /api/*       │  fetch /api/experiments
-            ▼                     ▼
-┌─────────────────────────────────────────────────────────┐
-│  VERCEL EDGE  (CDN + Serverless routing)                │
-│  Serves static React build, routes /api/* to functions  │
-└──────────┬──────────────┬────────────────┬──────────────┘
-           ▼              ▼                ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐
-│ /api/chat.js │  │/api/score.js │  │/api/experiments.js   │
-│              │  │              │  │                      │
-│ Validates    │  │ Builds judge │  │ GET  → lrange (KV)   │
-│ model param  │  │ rubric prompt│  │ POST → lpush (KV)    │
-│ Proxies to   │  │ Calls 4o-mini│  │ DELETE → filter+     │
-│ OpenAI API   │  │ Parses JSON  │  │         rewrite (KV) │
-│ Injects key  │  │ Clamps scores│  │ Caps at 50 records   │
-└──────┬───────┘  └──────┬───────┘  └──────────┬───────────┘
-       │                 │                      │
-       ▼                 ▼                      ▼
-┌─────────────────────┐            ┌────────────────────────┐
-│  OpenAI API         │            │  Upstash Redis (KV)    │
-│  /v1/chat/completions│           │  Serverless Redis store │
-│  model: user choice │            │  Accessed via REST API  │
-│  model: gpt-4o-mini │            │  KV_REST_API_URL +      │
-│  (for judge calls)  │            │  KV_REST_API_TOKEN      │
-└─────────────────────┘            └────────────────────────┘
+<img width="1372" height="1176" alt="image" src="https://github.com/user-attachments/assets/87e92b20-75ef-46a6-a58f-e848c33669e1" />
 
+```
 All secrets (OPENAI_API_KEY, KV_REST_API_URL, KV_REST_API_TOKEN)
 live exclusively in Vercel environment variables — never client-side.
 ```
@@ -313,5 +280,3 @@ This is a personal portfolio tool. The API key is protected server-side; the Red
 MIT — use freely, attribution appreciated.
 
 ---
-
-*Built to demonstrate that prompt engineering is a measurable discipline, not a dark art.*
