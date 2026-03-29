@@ -1,4 +1,4 @@
-# prompt_eval.lab
+# Prompt Evaluation Playground
 
 > A live prompt engineering evaluation playground — run experiments, score outputs with an LLM judge, and build a persistent portfolio of results.
 
