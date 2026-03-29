@@ -135,14 +135,14 @@ async function deleteExperiment(id) {
 // ── Tiny helpers ─────────────────────────────────────────────────────────────
 function Label({ children }) {
   return (
-    <div style={{ color: "#37474f", fontSize: 10, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: "0.5rem", textTransform: "uppercase" }}>
+    <div style={{ color: "#607d8b", fontSize: 10, fontWeight: 600, fontFamily: "monospace", letterSpacing: "0.12em", marginBottom: "0.5rem", textTransform: "uppercase" }}>
       {children}
     </div>
   );
 }
 function Micro({ children }) {
   return (
-    <div style={{ color: "#455a64", fontSize: 10, fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+    <div style={{ color: "#78909c", fontSize: 10, fontWeight: 600, fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.1em" }}>
       {children}
     </div>
   );
@@ -173,7 +173,7 @@ function NavBar({ tab, setTab }) {
         {["playground", "experiments"].map(t => (
           <button key={t} onClick={() => setTab(t)} style={{
             background: tab === t ? "rgba(100,255,218,0.12)" : "transparent",
-            color: tab === t ? "#64ffda" : "#607d8b",
+            color: tab === t ? "#64ffda" : "#90a4ae",
             border: tab === t ? "1px solid rgba(100,255,218,0.3)" : "1px solid transparent",
             borderRadius: 6, padding: "6px 16px",
             fontFamily: "'Courier New', monospace", fontSize: 12,
@@ -194,7 +194,7 @@ function ModelBar({ model, setModel }) {
       padding: "0.55rem 1.5rem",
       background: "rgba(0,0,0,0.3)", borderBottom: "1px solid #0e1c20",
     }}>
-      <span style={{ color: "#37474f", fontSize: 10, fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.1em" }}>Model</span>
+      <span style={{ color: "#78909c", fontSize: 10, fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.1em" }}>Model</span>
       <select value={model} onChange={e => setModel(e.target.value)} style={{
         background: "#0e1c20", border: "1px solid rgba(255,255,255,0.08)",
         borderRadius: 6, padding: "6px 10px", color: "#64ffda",
@@ -206,7 +206,7 @@ function ModelBar({ model, setModel }) {
         padding: "4px 10px", borderRadius: 20, fontSize: 10, fontFamily: "monospace",
         background: "rgba(100,255,218,0.08)", border: "1px solid rgba(100,255,218,0.25)", color: "#64ffda",
       }}>● server-side key</div>
-      <span style={{ color: "#1e3038", fontSize: 10, fontFamily: "monospace" }}>
+      <span style={{ color: "#546e7a", fontSize: 10, fontFamily: "monospace" }}>
         scoring via gpt-4o-mini judge · results saved to Upstash Redis
       </span>
     </div>
@@ -228,7 +228,7 @@ function StrategyPill({ strategy, selected, onClick }) {
         color: strategy.color, background: `${strategy.color}20`,
         padding: "2px 6px", borderRadius: 4, letterSpacing: "0.06em",
       }}>{strategy.tag}</span>
-      <span style={{ color: selected ? "#e0f7f4" : "#607d8b", fontSize: 12, whiteSpace: "nowrap" }}>
+      <span style={{ color: selected ? "#e0f7f4" : "#90a4ae", fontSize: 12, whiteSpace: "nowrap" }}>
         {strategy.label}
       </span>
     </button>
@@ -345,7 +345,7 @@ function Playground({ model, onExperimentSaved }) {
         <div style={{
           marginTop: "0.6rem", padding: "8px 14px", borderRadius: 8,
           background: `${strategy.color}0d`, border: `1px solid ${strategy.color}20`,
-          color: "#78909c", fontSize: 12, fontFamily: "monospace",
+          color: "#90a4ae", fontSize: 12, fontFamily: "monospace",
         }}>
           <span style={{ color: strategy.color }}>›</span> {strategy.description}
         </div>
@@ -375,7 +375,7 @@ function Playground({ model, onExperimentSaved }) {
             <pre style={{
               background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.05)",
               borderRadius: 8, padding: 12, margin: 0, fontSize: 11,
-              color: "#546e7a", fontFamily: "'Courier New', monospace",
+              color: "#90a4ae", fontFamily: "'Courier New', monospace",
               whiteSpace: "pre-wrap", wordBreak: "break-word", maxHeight: 160, overflowY: "auto",
             }}>{prompt}</pre>
           </div>
@@ -403,7 +403,7 @@ function Playground({ model, onExperimentSaved }) {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
               <Label>04 / Model Response</Label>
-              {elapsed && <span style={{ color: "#455a64", fontSize: 10, fontFamily: "monospace" }}>⏱ {elapsed}s · {model}</span>}
+              {elapsed && <span style={{ color: "#78909c", fontSize: 10, fontFamily: "monospace" }}>⏱ {elapsed}s · {model}</span>}
             </div>
             <div style={{
               background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.06)",
@@ -421,7 +421,7 @@ function Playground({ model, onExperimentSaved }) {
                   ))}
                 </div>
               )}
-              {!loading && !response && <span style={{ color: "#1e2d2d" }}>Response will appear here after running…</span>}
+              {!loading && !response && <span style={{ color: "#455a64" }}>Response will appear here after running…</span>}
               {!loading && response && <span style={{ whiteSpace: "pre-wrap" }}>{response}</span>}
             </div>
           </div>
@@ -449,12 +449,12 @@ function Playground({ model, onExperimentSaved }) {
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem" }}>
             <div>
-              <Label>05 / Evaluation Scores <span style={{ color: "#263238", fontStyle: "normal", textTransform: "none", fontSize: 9 }}>· judged by gpt-4o-mini</span></Label>
+              <Label>05 / Evaluation Scores <span style={{ color: "#607d8b", fontStyle: "normal", textTransform: "none", fontSize: 9 }}>· judged by gpt-4o-mini</span></Label>
               <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
                 {EVAL_DIMENSIONS.map(d => (
                   <div key={d.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
                     <ScoreDial value={scores[d.id]} color={d.color} />
-                    <span style={{ color: "#546e7a", fontSize: 10, fontFamily: "monospace", textAlign: "center" }}>{d.label}</span>
+                    <span style={{ color: "#90a4ae", fontSize: 10, fontFamily: "monospace", textAlign: "center" }}>{d.label}</span>
                   </div>
                 ))}
               </div>
@@ -462,19 +462,19 @@ function Playground({ model, onExperimentSaved }) {
                 <div style={{
                   marginTop: "1rem", padding: "8px 12px", borderRadius: 6,
                   background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-                  color: "#607d8b", fontFamily: "monospace", fontSize: 11, lineHeight: 1.6,
+                  color: "#90a4ae", fontFamily: "monospace", fontSize: 11, lineHeight: 1.6,
                   maxWidth: 500,
                 }}>
-                  <span style={{ color: "#455a64" }}>judge: </span>{rationale}
+                  <span style={{ color: "#78909c" }}>judge: </span>{rationale}
                 </div>
               )}
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ color: "#37474f", fontSize: 10, fontFamily: "monospace", marginBottom: 4 }}>OVERALL</div>
+              <div style={{ color: "#607d8b", fontSize: 10, fontFamily: "monospace", marginBottom: 4 }}>OVERALL</div>
               <div style={{ fontFamily: "monospace", fontSize: 42, fontWeight: 900, color: "#64ffda", lineHeight: 1, letterSpacing: "-0.02em" }}>
                 {avg(scores)}
               </div>
-              <div style={{ color: "#455a64", fontSize: 10, fontFamily: "monospace" }}>/ 10.0</div>
+              <div style={{ color: "#78909c", fontSize: 10, fontFamily: "monospace" }}>/ 10.0</div>
               <div style={{
                 marginTop: 8, padding: "4px 10px", borderRadius: 20,
                 background: `${strategy.color}18`, border: `1px solid ${strategy.color}30`,
@@ -491,7 +491,7 @@ function Playground({ model, onExperimentSaved }) {
                     ? "rgba(100,255,218,0.12)"
                     : "rgba(255,255,255,0.04)",
                   border: `1px solid ${saveStatus === "saved" ? "rgba(100,255,218,0.3)" : "rgba(255,255,255,0.12)"}`,
-                  color: saveStatus === "saved" ? "#64ffda" : "#546e7a",
+                  color: saveStatus === "saved" ? "#64ffda" : "#90a4ae",
                   fontFamily: "'Courier New', monospace", fontSize: 11,
                   cursor: saving || saveStatus === "saved" ? "not-allowed" : "pointer",
                   letterSpacing: "0.08em", transition: "all 0.3s",
@@ -557,17 +557,17 @@ function ExperimentCard({ exp, onDelete }) {
           <span style={{
             color: exp.winnerColor, fontFamily: "monospace", fontSize: 16, fontWeight: 900,
           }}>{overall}</span>
-          <span style={{ color: "#263238", fontSize: 10, fontFamily: "monospace" }}>{exp.date}</span>
-          {exp.model && <span style={{ color: "#1e3038", fontSize: 9, fontFamily: "monospace" }}>{exp.model}</span>}
+          <span style={{ color: "#607d8b", fontSize: 10, fontFamily: "monospace" }}>{exp.date}</span>
+          {exp.model && <span style={{ color: "#546e7a", fontSize: 9, fontFamily: "monospace" }}>{exp.model}</span>}
           <button
             onClick={handleDelete}
             disabled={deleting}
             style={{
-              background: "none", border: "none", color: "#37474f", cursor: "pointer",
+              background: "none", border: "none", color: "#607d8b", cursor: "pointer",
               fontSize: 12, padding: "2px 4px", opacity: deleting ? 0.4 : 1,
             }}
           >✕</button>
-          <span style={{ color: "#37474f", fontSize: 12 }}>{open ? "▾" : "▸"}</span>
+          <span style={{ color: "#607d8b", fontSize: 12 }}>{open ? "▾" : "▸"}</span>
         </div>
       </div>
 
@@ -576,11 +576,11 @@ function ExperimentCard({ exp, onDelete }) {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
             <div>
               <Micro>Task</Micro>
-              <p style={{ color: "#78909c", fontSize: 12, fontFamily: "monospace", margin: "4px 0 12px", lineHeight: 1.5 }}>{exp.task}</p>
+              <p style={{ color: "#90a4ae", fontSize: 12, fontFamily: "monospace", margin: "4px 0 12px", lineHeight: 1.5 }}>{exp.task}</p>
               {exp.rationale && (
                 <>
                   <Micro>Judge Rationale</Micro>
-                  <p style={{ color: "#546e7a", fontSize: 12, lineHeight: 1.6, margin: "4px 0 0", fontStyle: "italic" }}>{exp.rationale}</p>
+                  <p style={{ color: "#90a4ae", fontSize: 12, lineHeight: 1.6, margin: "4px 0 0", fontStyle: "italic" }}>{exp.rationale}</p>
                 </>
               )}
             </div>
@@ -588,7 +588,7 @@ function ExperimentCard({ exp, onDelete }) {
               <Micro>Scores</Micro>
               {EVAL_DIMENSIONS.map(d => (
                 <div key={d.id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: 8 }}>
-                  <span style={{ color: "#455a64", fontSize: 10, fontFamily: "monospace", width: 110 }}>{d.label}</span>
+                  <span style={{ color: "#78909c", fontSize: 10, fontFamily: "monospace", width: 110 }}>{d.label}</span>
                   <div style={{ flex: 1, height: 4, background: "rgba(255,255,255,0.05)", borderRadius: 2 }}>
                     <div style={{
                       height: "100%", borderRadius: 2, background: exp.winnerColor,
@@ -599,7 +599,7 @@ function ExperimentCard({ exp, onDelete }) {
                 </div>
               ))}
               <div style={{ marginTop: 10, textAlign: "right" }}>
-                <span style={{ color: "#37474f", fontFamily: "monospace", fontSize: 10 }}>Overall: </span>
+                <span style={{ color: "#607d8b", fontFamily: "monospace", fontSize: 10 }}>Overall: </span>
                 <span style={{ color: exp.winnerColor, fontFamily: "monospace", fontSize: 10, fontWeight: 700 }}>{overall} / 10</span>
               </div>
             </div>
@@ -637,7 +637,7 @@ function Experiments({ experiments, setExperiments, loading, error }) {
         <h1 style={{ margin: "6px 0 0", fontFamily: "'Courier New', monospace", fontSize: 26, fontWeight: 900, color: "#e0f7f4" }}>
           Prompt Strategy <span style={{ color: "#64ffda" }}>Experiments</span>
         </h1>
-        <p style={{ color: "#546e7a", fontSize: 13, fontFamily: "monospace", marginTop: 8, lineHeight: 1.7 }}>
+        <p style={{ color: "#78909c", fontSize: 13, fontFamily: "monospace", marginTop: 8, lineHeight: 1.7 }}>
           Real scored experiments saved from the playground. Run an experiment, score it, then save it here.
         </p>
       </div>
@@ -661,7 +661,7 @@ function Experiments({ experiments, setExperiments, loading, error }) {
 
       {/* States */}
       {loading && (
-        <div style={{ color: "#37474f", fontFamily: "monospace", fontSize: 12, padding: "2rem", textAlign: "center" }}>
+        <div style={{ color: "#607d8b", fontFamily: "monospace", fontSize: 12, padding: "2rem", textAlign: "center" }}>
           loading experiments…
         </div>
       )}
@@ -676,7 +676,7 @@ function Experiments({ experiments, setExperiments, loading, error }) {
         <div style={{
           padding: "3rem", textAlign: "center", borderRadius: 10,
           border: "1px dashed rgba(255,255,255,0.06)",
-          color: "#37474f", fontFamily: "monospace", fontSize: 12, lineHeight: 2,
+          color: "#607d8b", fontFamily: "monospace", fontSize: 12, lineHeight: 2,
         }}>
           No experiments saved yet.<br />
           Run an experiment in the playground, score it with the LLM judge,<br />
@@ -735,7 +735,7 @@ export default function App() {
             <h1 style={{ margin: "0 0 4px", fontFamily: "'Courier New', monospace", fontSize: 24, fontWeight: 900, color: "#e0f7f4" }}>
               Prompt Strategy <span style={{ color: "#64ffda" }}>Playground</span>
             </h1>
-            <p style={{ color: "#455a64", fontFamily: "monospace", fontSize: 12, margin: 0 }}>
+            <p style={{ color: "#78909c", fontFamily: "monospace", fontSize: 12, margin: 0 }}>
               Compare how different prompt engineering strategies affect LLM output quality · powered by OpenAI
             </p>
           </div>
