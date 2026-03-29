@@ -112,17 +112,13 @@ const avg = (scores) => {
   return (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1);
 };
 
-// ── OpenAI API Call ──────────────────────────────────────────────────────────
-async function callOpenAI(prompt, apiKey, model) {
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+// ── OpenAI API Call (via backend) ────────────────────────────────────────────
+async function callOpenAI(prompt, model) {
+  const res = await fetch("/api/chat", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model,
-      max_tokens: 1000,
       messages: [{ role: "user", content: prompt }],
     }),
   });
@@ -188,40 +184,14 @@ function NavBar({ tab, setTab }) {
   );
 }
 
-// ── API Key / Model bar ───────────────────────────────────────────────────────
-function ApiKeyBar({ apiKey, setApiKey, model, setModel }) {
-  const [show, setShow] = useState(false);
-  const isSet = apiKey.trim().length > 10;
+// ── Model bar ────────────────────────────────────────────────────────────────
+function ModelBar({ model, setModel }) {
   return (
     <div style={{
       display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap",
       padding: "0.55rem 1.5rem",
       background: "rgba(0,0,0,0.3)", borderBottom: "1px solid #0e1c20",
     }}>
-      <span style={{ color: "#37474f", fontSize: 10, fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
-        OpenAI Key
-      </span>
-      <div style={{ position: "relative", flex: "1 1 220px", maxWidth: 320 }}>
-        <input
-          type={show ? "text" : "password"}
-          value={apiKey}
-          onChange={e => setApiKey(e.target.value)}
-          placeholder="sk-..."
-          style={{
-            width: "100%", boxSizing: "border-box",
-            background: "rgba(255,255,255,0.03)",
-            border: `1px solid ${isSet ? "rgba(100,255,218,0.35)" : "rgba(255,255,255,0.08)"}`,
-            borderRadius: 6, padding: "6px 36px 6px 10px",
-            color: "#cfd8dc", fontFamily: "monospace", fontSize: 12, outline: "none",
-            transition: "border-color 0.2s",
-          }}
-        />
-        <button onClick={() => setShow(s => !s)} style={{
-          position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
-          background: "none", border: "none", color: "#455a64", cursor: "pointer", fontSize: 12, padding: 0,
-        }}>{show ? "🙈" : "👁"}</button>
-      </div>
-
       <span style={{ color: "#37474f", fontSize: 10, fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.1em" }}>Model</span>
       <select value={model} onChange={e => setModel(e.target.value)} style={{
         background: "#0e1c20", border: "1px solid rgba(255,255,255,0.08)",
@@ -233,13 +203,10 @@ function ApiKeyBar({ apiKey, setApiKey, model, setModel }) {
 
       <div style={{
         padding: "4px 10px", borderRadius: 20, fontSize: 10, fontFamily: "monospace",
-        background: isSet ? "rgba(100,255,218,0.08)" : "rgba(255,110,110,0.08)",
-        border: `1px solid ${isSet ? "rgba(100,255,218,0.25)" : "rgba(255,110,110,0.25)"}`,
-        color: isSet ? "#64ffda" : "#ff6e6e",
-        transition: "all 0.3s",
-      }}>{isSet ? "● connected" : "○ no key set"}</div>
-
-      <span style={{ color: "#1e2d2d", fontSize: 10, fontFamily: "monospace" }}>🔒 stored in memory only · never sent anywhere else</span>
+        background: "rgba(100,255,218,0.08)",
+        border: "1px solid rgba(100,255,218,0.25)",
+        color: "#64ffda",
+      }}>● server-side key</div>
     </div>
   );
 }
@@ -286,7 +253,7 @@ function ScoreDial({ value, color = "#64ffda" }) {
 }
 
 // ── Playground ────────────────────────────────────────────────────────────────
-function Playground({ apiKey, model }) {
+function Playground({ model }) {
   const [strategy, setStrategy] = useState(STRATEGIES[0]);
   const [task, setTask] = useState("Explain why the sky is blue in simple terms.");
   const [response, setResponse] = useState("");
@@ -298,11 +265,10 @@ function Playground({ apiKey, model }) {
   const prompt = strategy.template.replace("{task}", task);
 
   async function run() {
-    if (!apiKey.trim()) { setError("Enter your OpenAI API key in the bar above first."); return; }
     setError(""); setLoading(true); setResponse(""); setScores(null); setElapsed(null);
     const t0 = Date.now();
     try {
-      const res = await callOpenAI(prompt, apiKey, model);
+      const res = await callOpenAI(prompt, model);
       setResponse(res);
       setElapsed(((Date.now() - t0) / 1000).toFixed(2));
     } catch (e) {
@@ -571,7 +537,6 @@ function Experiments() {
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function App() {
   const [tab, setTab] = useState("playground");
-  const [apiKey, setApiKey] = useState("");
   const [model, setModel] = useState("gpt-4o");
 
   return (
@@ -584,7 +549,7 @@ export default function App() {
       fontFamily: "system-ui, sans-serif",
     }}>
       <NavBar tab={tab} setTab={setTab} />
-      <ApiKeyBar apiKey={apiKey} setApiKey={setApiKey} model={model} setModel={setModel} />
+      <ModelBar model={model} setModel={setModel} />
 
       {tab === "playground" && (
         <div>
@@ -597,7 +562,7 @@ export default function App() {
               Compare how different prompt engineering strategies affect LLM output quality · powered by OpenAI
             </p>
           </div>
-          <Playground apiKey={apiKey} model={model} />
+          <Playground model={model} />
         </div>
       )}
       {tab === "experiments" && <Experiments />}
