@@ -11,18 +11,23 @@
 
 import { Redis } from "@upstash/redis";
 
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-});
-
 const KEY = "experiments";
 const MAX_EXPERIMENTS = 50;
 
+function getRedis() {
+  const url = process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  return new Redis({ url, token });
+}
+
 export default async function handler(req, res) {
   try {
+    const redis = getRedis();
+
     // ── GET ────────────────────────────────────────────────────────────────
     if (req.method === "GET") {
+      if (!redis) return res.status(200).json([]);
       const raw = await redis.lrange(KEY, 0, MAX_EXPERIMENTS - 1);
       const experiments = raw.map((item) =>
         typeof item === "string" ? JSON.parse(item) : item
@@ -32,6 +37,7 @@ export default async function handler(req, res) {
 
     // ── POST ───────────────────────────────────────────────────────────────
     if (req.method === "POST") {
+      if (!redis) return res.status(503).json({ error: "Redis not configured. Set KV_REST_API_URL and KV_REST_API_TOKEN env vars." });
       const {
         title, strategyId, strategyLabel, winnerTag, winnerColor,
         model, task, prompt, scores, elapsed, rationale,
@@ -67,6 +73,7 @@ export default async function handler(req, res) {
 
     // ── DELETE ─────────────────────────────────────────────────────────────
     if (req.method === "DELETE") {
+      if (!redis) return res.status(503).json({ error: "Redis not configured. Set KV_REST_API_URL and KV_REST_API_TOKEN env vars." });
       const { id } = req.query;
       if (!id) return res.status(400).json({ error: "id query param required" });
 
